@@ -3,11 +3,14 @@ package com.example.waterminder.navigation
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.waterminder.db.dao.UserDAO
+import com.example.waterminder.models.AuthViewModel
 import com.example.waterminder.ui.screens.*
+
 
 @Composable
 fun NavGraph(
@@ -17,6 +20,7 @@ fun NavGraph(
 
     val navController = rememberNavController()
     val duration = 300 // Animation duration
+    val authViewModel: AuthViewModel = viewModel()
 
     // Helper functions within the scope of NavGraph
 
@@ -75,7 +79,7 @@ fun NavGraph(
             exitTransition = { exitTransition() },
             popEnterTransition = { popEnterTransition() },
             popExitTransition = { popExitTransition() }
-        ) { SignupScreen(navController) }
+        ) { SignupScreen(navController, authViewModel) }
 
         composable(
             route = "login",
@@ -83,7 +87,7 @@ fun NavGraph(
             exitTransition = { exitTransition() },
             popEnterTransition = { popEnterTransition() },
             popExitTransition = { popExitTransition() }
-        ) { LoginScreen(navController) }
+        ) { LoginScreen(navController, authViewModel) }
 
         composable(
             route = "home",

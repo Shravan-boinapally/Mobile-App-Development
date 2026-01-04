@@ -14,19 +14,23 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.waterminder.models.AuthViewModel
 import com.example.waterminder.ui.theme.AppBackground
+import com.example.waterminder.ui.theme.WaterMinderTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun SignupScreen(navController: NavController) {
-
-    val authViewModel: AuthViewModel = viewModel()
+fun SignupScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel?
+) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -46,7 +50,7 @@ fun SignupScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                contentAlignment = Alignment.Center // ✅ Center the card
+                contentAlignment = Alignment.Center
             ) {
                 Card(
                     modifier = Modifier
@@ -147,7 +151,7 @@ fun SignupScreen(navController: NavController) {
                                 loading = true
                                 error = null
 
-                                authViewModel.signUp(
+                                authViewModel?.signUp(
                                     username,
                                     email,
                                     password,
@@ -216,5 +220,16 @@ fun SignupScreen(navController: NavController) {
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignUpScreenPreview() {
+    WaterMinderTheme {
+        SignupScreen(
+            navController = rememberNavController(),
+            authViewModel = null
+        )
     }
 }

@@ -18,6 +18,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.waterminder.db.dao.UserDAO
 import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.waterminder.db.entity.UserEntity
+import com.example.waterminder.ui.theme.WaterMinderTheme
 
 @Composable
 fun HomeScreen(
@@ -32,6 +37,7 @@ fun HomeScreen(
     val goal = 2000
     val intake = (progress * goal).toInt()
 
+    // ---- UI ----
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -46,14 +52,13 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 20.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // ---------------- TOP ROW ----------------
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -67,10 +72,7 @@ fun HomeScreen(
                     color = Color(0xFF0277BD)
                 )
 
-                // --- Logout Icon Button (TV Remote Style) ---
-                IconButton(
-                    onClick = { showLogoutDialog = true },
-                ) {
+                IconButton(onClick = { showLogoutDialog = true }) {
                     Icon(
                         imageVector = Icons.Default.PowerSettingsNew,
                         contentDescription = "Logout",
@@ -78,9 +80,7 @@ fun HomeScreen(
                         modifier = Modifier.size(25.dp)
                     )
                 }
-
             }
-            // ------------------------------------------
 
             Text(
                 text = "Stay hydrated, stay healthy!",
@@ -90,7 +90,6 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // ---------------- PROGRESS CIRCLE ----------------
             Box(contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
                     progress = progress,
@@ -117,9 +116,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = {
-                    if (progress < 1f) progress += 0.1f
-                },
+                onClick = { if (progress < 1f) progress += 0.1f },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0277BD)),
                 shape = RoundedCornerShape(50),
                 modifier = Modifier
@@ -159,7 +156,7 @@ fun HomeScreen(
         }
     }
 
-    // ----------------- LOGOUT CONFIRMATION DIALOG -----------------
+    // ---- Logout Dialog ----
     if (showLogoutDialog) {
         AlertDialog(
             onDismissRequest = { showLogoutDialog = false },
@@ -186,6 +183,41 @@ fun HomeScreen(
                     Text("Cancel", color = Color(0xFF0277BD))
                 }
             }
+        )
+    }
+}
+
+class FakeUserDao : UserDAO {
+
+    override suspend fun saveUser(user: UserEntity) {
+        // No-op for preview
+    }
+
+    override suspend fun deleteUser(user: UserEntity) {
+        // No-op for preview
+    }
+
+    override suspend fun getUser(): UserEntity? {
+        // Return a dummy user for preview
+        return UserEntity(
+            email = "preview@example.com",
+        )
+    }
+
+    override suspend fun clearUser() {
+        // No-op for preview
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    WaterMinderTheme {
+        HomeScreen(
+            navController = rememberNavController(),
+            userDao = FakeUserDao()
         )
     }
 }

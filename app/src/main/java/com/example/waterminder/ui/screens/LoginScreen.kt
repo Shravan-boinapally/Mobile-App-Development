@@ -12,30 +12,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.waterminder.db.entity.UserEntity
 import com.example.waterminder.db.modules.DatabaseModule
 import com.example.waterminder.models.AuthViewModel
 import com.example.waterminder.ui.theme.AppBackground
+import com.example.waterminder.ui.theme.WaterMinderTheme
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 
 
 @Composable
-fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = AuthViewModel()) {
+fun LoginScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel? = null
+) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var loading by remember { mutableStateOf(false) } // Track loading
+    var loading by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = Color.Transparent
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         AppBackground {
             Box(
@@ -83,7 +88,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = Aut
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             leadingIcon = { Icon(Icons.Default.Person, contentDescription = "Email Icon") },
-                            enabled = !loading // ✅ Disable when loading
+                            enabled = !loading
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -97,7 +102,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = Aut
                             visualTransformation = PasswordVisualTransformation(),
                             modifier = Modifier.fillMaxWidth(),
                             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password Icon") },
-                            enabled = !loading // Disable when loading
+                            enabled = !loading
                         )
 
                         Spacer(modifier = Modifier.height(32.dp))
@@ -114,7 +119,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = Aut
                                 scope.launch {
                                     // Add a small delay to simulate network call
                                     //delay(500)
-                                    authViewModel.login(
+                                    authViewModel?.login(
                                         email,
                                         password,
                                         onSuccess = {
@@ -172,3 +177,17 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = Aut
         }
     }
 }
+
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    WaterMinderTheme {
+        LoginScreen(
+            navController = rememberNavController(),
+            authViewModel = null
+        )
+    }
+}
+
+

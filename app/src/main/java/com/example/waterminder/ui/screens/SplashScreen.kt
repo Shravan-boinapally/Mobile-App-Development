@@ -8,10 +8,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.waterminder.db.modules.DatabaseModule
 import com.example.waterminder.ui.theme.AppBackground
+import com.example.waterminder.ui.theme.WaterMinderTheme
 import kotlinx.coroutines.delay
 
 
@@ -50,5 +53,13 @@ fun SplashScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview() {
+    WaterMinderTheme() {
+        SplashScreen(navController = rememberNavController())
     }
 }
